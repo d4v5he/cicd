@@ -66,3 +66,9 @@ jobs:
           docker pull d4v5he/users_app:v1
           docker run --rm d4v5he/users_app:v1 > users_app.output
           cat users_app.output
+
+      - name: Upload users_app.output as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: users_app_output
+          path: users_app.output

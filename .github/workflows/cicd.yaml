@@ -64,9 +64,12 @@ jobs:
     needs: docker-build-push
 
     steps:
-      - name: Pull and run Docker image
+      - name: Pull Docker image
         run: |
           docker pull d4v5he/users_app:v1
+
+      - name: Docker Run
+        run: |
           docker run --rm d4v5he/users_app:v1 > users_app.output
           cat users_app.output
 

@@ -50,7 +50,7 @@ jobs:
 
       - name: Build and tag Docker image
         run: |
-          docker build -t users_app:v1 .
+          docker build -t users_app:v1 ./app
           docker tag users_app:v1 d4v5he/users_app:v1
 
       - name: Push Docker image

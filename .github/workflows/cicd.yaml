@@ -28,7 +28,7 @@ jobs:
 
       - name: Run tests
         run: |
-          cd cicd/app
+          cd app
           pytest
 
   docker-build-push:

@@ -5,8 +5,8 @@ on:
   push:
     branches:
       - main
-    paths-ignore:
-      - .github/workflows/cicd.yaml
+    # paths-ignore:
+    #   - .github/workflows/cicd.yaml
   pull_request:
     branches:
       - main

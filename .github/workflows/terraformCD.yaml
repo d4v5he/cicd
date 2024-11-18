@@ -85,6 +85,8 @@ jobs:
           echo "### Terraform Plan Summary" > plan-summary.md
           terraform show -json tfplan >> plan-summary.md
           gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT }}
 
   manual-approval:
     needs: terraform-plan

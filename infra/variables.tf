@@ -19,5 +19,5 @@ variable "environment" {
 variable "vpc_id" {
   description = "Work VPC IP"
   type        = string
-  default     = "dev"
+  default     = "vpc-0299060595460e45b"
 }

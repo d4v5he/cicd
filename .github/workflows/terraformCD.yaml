@@ -82,7 +82,7 @@ jobs:
           path: infra/tfplan
 
       - name: Post Plan Summary in PR
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+        if: github.event_name == 'pull_request'
         working-directory: infra
         run: |
           echo "### Terraform Plan Summary" > plan-summary.md

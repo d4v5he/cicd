@@ -82,7 +82,7 @@ jobs:
         if: github.event_name == 'pull_request'
         working-directory: infra
         run: |
-          sed -n '/Terraform will perform the following actions:/,/───────────────/p' tfplan > plan-summary.md
+          cat tfplan | grep 'Plan: ' > plan-summary.md
           gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
         env:
           GH_TOKEN: ${{ secrets.GIT_PAT }}

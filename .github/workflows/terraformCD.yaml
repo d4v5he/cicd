@@ -52,6 +52,13 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: Set Docker
+        run: |
+          sudo yum update -y
+          sudo yum install docker -y
+          sudo service docker start
+          sudo usermod -a -G docker ec2-user
+
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
@@ -87,13 +94,6 @@ jobs:
     runs-on: terraformcd
     if: github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main'
     steps:
-      - name: Set Docker
-        run: |
-          sudo yum update -y
-          sudo yum install docker -y
-          sudo service docker start
-          sudo usermod -a -G docker ec2-user
-
       - uses: trstringer/manual-approval@v1
         with:
           secret: ${{ github.TOKEN }}

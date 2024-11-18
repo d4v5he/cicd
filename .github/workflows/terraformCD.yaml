@@ -4,9 +4,9 @@ run-name: TerraformCD
 on:
   push:
     branches:
-      - feature/*
+      - main
   pull_request:
-    types: [closed]
+    types: [ opened, synchronize, reopened, edited ]
   workflow_dispatch:
     inputs:
       TF_LOG:
@@ -31,18 +31,6 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Install Dependencies
-        run: |
-          if ! command -v gh &>/dev/null; then
-            echo "Installing GitHub CLI..."
-            sudo yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-            sudo yum install -y gh
-          else
-            echo "GitHub CLI already installed."
-          fi
-          echo "Installing jq..."
-          sudo yum install -y jq
-
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -80,14 +68,6 @@ jobs:
         with:
           name: terraform-plan
           path: infra/tfplan
-
-      - name: Post Plan Summary in PR
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        working-directory: infra
-        run: |
-          echo "### Terraform Plan Summary" > plan-summary.md
-          terraform show -json tfplan | jq '.' >> plan-summary.md
-          gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
 
   manual-approval:
     needs: terraform-plan

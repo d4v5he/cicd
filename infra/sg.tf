@@ -1,5 +1,5 @@
 resource "aws_security_group" "example" {
-  name        = "example-sg-${var.environment}"
+  name        = "cicd-sg-${var.environment}"
   description = "Security group for ${var.environment} environment"
   vpc_id      = "${var.vpc_id}"
 
@@ -15,7 +15,7 @@ resource "aws_security_group" "example" {
 
   tags = merge(
     {
-      Name        = "example-sg-${var.environment}"
+      Name        = "cicd-sg-${var.environment}"
       Environment = var.environment
     },
     var.environment == "dev" ? { Dev = "true" } : {}

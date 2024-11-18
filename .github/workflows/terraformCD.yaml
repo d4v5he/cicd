@@ -28,18 +28,6 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Install Dependencies
-        run: |
-          if ! command -v gh &>/dev/null; then
-            echo "Installing GitHub CLI..."
-            sudo yum-config-manager --add-repo https://cli.github.com/packages/rpm/gh-cli.repo
-            sudo yum install -y gh
-          else
-            echo "GitHub CLI already installed."
-          fi
-          echo "Installing jq..."
-          sudo yum install -y jq
-
       - name: Checkout Code
         uses: actions/checkout@v3
 
@@ -77,15 +65,6 @@ jobs:
         with:
           name: terraform-plan
           path: infra/tfplan
-
-      - name: Post Plan Summary in PR
-        if: github.event_name == 'pull_request'
-        working-directory: infra
-        run: |
-          cat infra/tfplan | grep 'Plan: ' > plan-summary.md
-          gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
-        env:
-          GH_TOKEN: ${{ secrets.GIT_PAT }}
 
   manual-approval:
     needs: terraform-plan

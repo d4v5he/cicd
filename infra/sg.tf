@@ -1,7 +1,7 @@
 resource "aws_security_group" "example" {
   name        = "example-sg-${var.environment}"
   description = "Security group for ${var.environment} environment"
-  vpc_id      = "vpc-xxxxxxx" # Replace with your VPC ID
+  vpc_id      = "${var.vpc_ip}"
 
   dynamic "ingress" {
     for_each = local.ingress_ports

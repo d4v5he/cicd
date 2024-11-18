@@ -26,18 +26,18 @@ jobs:
       contents: read
       pull-requests: write
     steps:
-      - name: Install Dependencies
-        run: |
-          if ! command -v gh &>/dev/null; then
-            echo "Installing GitHub CLI..."
-            curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
-            sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
-            echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-            sudo apt update && sudo apt install gh -y
-          else
-            echo "GitHub CLI already installed."
-          fi
-          sudo apt update && sudo apt install jq -y
+      # - name: Install Dependencies
+      #   run: |
+      #     if ! command -v gh &>/dev/null; then
+      #       echo "Installing GitHub CLI..."
+      #       curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+      #       sudo chmod go+r /usr/share/keyrings/githubcli-archive-keyring.gpg
+      #       echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+      #       sudo apt update && sudo apt install gh -y
+      #     else
+      #       echo "GitHub CLI already installed."
+      #     fi
+      #     sudo apt update && sudo apt install jq -y
 
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -56,6 +56,7 @@ jobs:
         run: terraform plan -out=tfplan -input=false
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
+          TF_LOG: ${{ 'DEBUG' if inputs.debug == true else 'INFO' }}
 
       - name: Upload Plan Artifact
         uses: actions/upload-artifact@v3
@@ -63,13 +64,13 @@ jobs:
           name: terraform-plan
           path: infra/tfplan
 
-      - name: Post Plan Summary in PR (if on main branch)
-        if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
-        working-directory: infra
-        run: |
-          echo "### Terraform Plan Summary" > plan-summary.md
-          terraform show -json tfplan | jq '.' >> plan-summary.md
-          gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
+      # - name: Post Plan Summary in PR (if on main branch)
+      #   if: github.event_name == 'pull_request' && github.event.pull_request.merged == true
+      #   working-directory: infra
+      #   run: |
+      #     echo "### Terraform Plan Summary" > plan-summary.md
+      #     terraform show -json tfplan | jq '.' >> plan-summary.md
+      #     gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
 
   manual-approval:
     needs: terraform-plan
@@ -99,16 +100,11 @@ jobs:
         uses: hashicorp/setup-terraform@v2
         with:
           terraform_version: ${{ env.TF_VERSION }}
+          TF_LOG: ${{ 'DEBUG' if inputs.debug == true else 'INFO' }}
 
       - name: Terraform Apply
         working-directory: infra
         run: terraform apply -input=false tfplan
         env:
           AWS_REGION: ${{ env.AWS_REGION }}
-
-      - name: Apply Debug Mode (Optional)
-        if: github.event.inputs.debug == 'true'
-        working-directory: infra
-        run: terraform apply -input=false -debug tfplan
-        env:
-          AWS_REGION: ${{ env.AWS_REGION }}
+          TF_LOG: ${{ 'DEBUG' if inputs.debug == true else 'INFO' }}

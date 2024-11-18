@@ -1,3 +1,3 @@
 locals {
-  ingress_ports = var.default_ports ++ var.extra_ports
+  ingress_ports = concat(var.default_ports, var.extra_ports)
 }

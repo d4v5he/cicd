@@ -1,9 +1,10 @@
 name: CI/CD Pipeline
 run-name: CI/CD
 
-# on:
-#   push:
-#     branches:
+on:
+  push:
+    branches:
+        - test
 #       - main
 #     paths-ignore:
 #       - .github/workflows/cicd.yaml

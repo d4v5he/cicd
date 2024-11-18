@@ -1,0 +1,57 @@
+name: Setup Terraform S3 Backend
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-backend:
+    runs-on: terraformcd
+    permissions:
+      contents: read
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v3
+
+      - name: Install Terraform
+        uses: hashicorp/setup-terraform@v2
+        with:
+          terraform_version: 1.5.7
+
+      - name: Initialize Terraform Without Backend
+        working-directory: infra/terraform_s3_backend
+        run: |
+          terraform init -backend=false
+
+      - name: Validate Terraform Configuration
+        working-directory: infra/terraform_s3_backend
+        run: terraform validate
+
+      - name: Plan
+        working-directory: infra/terraform_s3_backend
+        run: terraform plan -out=tfplan
+
+      - name: Upload tfplan artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: tfplan
+          path: tfplan
+
+      - name: Apply Terraform - S3 Bucket
+        working-directory: infra/terraform_s3_backend
+        run: terraform apply -auto-approve tfplan
+
+      - name: Configure and Migrate Backend to S3
+        working-directory: infra/terraform_s3_backend
+        run: |
+          terraform init \
+            -backend-config="davshe-technion-cicd-13579" \
+            -backend-config="key=terraform/state/dev/terraform.tfstate" \
+            -backend-config="region=us-east-1" \
+            -backend-config="encrypt=true" \
+            -reconfigure
+
+      - name: Finalize
+        working-directory: infra/terraform_s3_backend
+        run: |
+          terraform apply -auto-approve

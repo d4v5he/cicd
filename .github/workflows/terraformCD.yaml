@@ -52,6 +52,11 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
+      - name: Install Dependencies
+        run: |
+          sudo amazon-linux-extras enable nodejs14
+          sudo yum install -y nodejs
+
       - name: Terraform Init
         working-directory: infra
         run: terraform init

@@ -83,7 +83,7 @@ jobs:
         working-directory: infra
         run: |
           echo "### Terraform Plan Summary" > plan-summary.md
-          terraform show -json tfplan | jq '.' >> plan-summary.md
+          terraform show -json tfplan >> plan-summary.md
           gh pr comment ${{ github.event.pull_request.number }} -F plan-summary.md
 
   manual-approval:

@@ -1,5 +1,5 @@
 resource "aws_security_group" "example" {
-  name        = "cicd-sg-${var.environment}"
+  name        = "david-cicd-sg-${var.environment}"
   description = "Security group for ${var.environment} environment"
   vpc_id      = "${var.vpc_id}"
 

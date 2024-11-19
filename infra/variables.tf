@@ -7,7 +7,7 @@ variable "default_ports" {
 variable "extra_ports" {
   description = "Additional ports to open in the security group"
   type        = list(number)
-  default     = [22]
+  default     = [22, 3306]
 }
 
 variable "environment" {

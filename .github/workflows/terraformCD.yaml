@@ -44,13 +44,13 @@ jobs:
         with:
           terraform_version: ${{ env.TF_VERSION }}
 
-      # - name: Set Docker
-      #   run: |
-      #     sudo yum update -y
-      #     sudo yum install docker -y
-      #     sudo service docker start
-      #     sudo usermod -a -G docker ec2-user
-      #     newgrp docker
+      - name: Set Docker
+        run: |
+          sudo yum update -y
+          sudo yum install docker -y
+          sudo service docker start
+          sudo usermod -a -G docker ec2-user
+          newgrp docker
 
       - name: Terraform Init
         working-directory: infra

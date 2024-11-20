@@ -9,7 +9,7 @@ def get_users() -> list:
 
 def print_users(users: list) -> None:
     for user in users:
-        print(user['firstName'], user['lastName'])
+        print(user['firstName'], 
 
 
 def main():

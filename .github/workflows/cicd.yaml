@@ -5,6 +5,7 @@ on:
   push:
     branches:
         - test
+        - ci-cd2
 #       - main
 #     paths-ignore:
 #       - .github/workflows/cicd.yaml

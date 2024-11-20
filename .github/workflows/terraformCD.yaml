@@ -5,7 +5,7 @@ on:
   push:
     branches:
       - main
-      -ci-cd2
+      - ci-cd2
   pull_request:
     types: [ opened, synchronize, reopened, edited ]
   workflow_dispatch:

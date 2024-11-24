@@ -24,7 +24,7 @@ jobs:
         run: pytest db_app/test_users.py
 
       - name: Trivy Code Security Scan
-        uses: actions/security-scan@main
+        uses: cicd/.github/actions/security-scan@main
         with:
           scan_type: 'repository'
           severities: 'HIGH,CRITICAL'
@@ -33,18 +33,18 @@ jobs:
         run: docker build -t python-app .
 
       - name: Trivy Docker Security Scan
-        uses: actions/security-scan@main
+        uses: cicd/.github/actions/security-scan@main
         with:
           scan_type: 'image'
           image_to_scan: 'python-app:latest'
           severities: 'HIGH,CRITICAL'
 
       - name: Run Integration Tests
-        uses: actions/integration@main
+        uses: cicd/.github/actions/integration@main
         with:
           skip_checkout: 'true'
 
       - name: Bump Version
-        uses: actions/version-bump@main
+        uses: cicd/.github/actions/version-bump@main
         with:
           version_type: 'patch'

@@ -9,7 +9,7 @@ on:
 
 jobs:
   ci-pipeline:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout Code
@@ -18,7 +18,7 @@ jobs:
       - name: Install Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest requests
+          pip install pytest requests mysql-connector-python
 
       - name: Run Unit Tests
         run: pytest db_app/test_users.py

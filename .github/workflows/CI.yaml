@@ -23,7 +23,7 @@ jobs:
         run: pytest db_app/test_users.py
 
       - name: Trivy Code Security Scan
-        uses: .github/actions/security-scan@main
+        uses: actions/security-scan@main
         with:
           scan_type: 'repository'
           severities: 'HIGH,CRITICAL'
@@ -39,11 +39,11 @@ jobs:
           severities: 'HIGH,CRITICAL'
 
       - name: Run Integration Tests
-        uses: .github/actions/integration@main
+        uses: actions/integration@main
         with:
           skip_checkout: 'true'
 
       - name: Bump Version
-        uses: .github/actions/version-bump@main
+        uses: actions/version-bump@main
         with:
           version_type: 'patch'

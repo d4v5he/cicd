@@ -2,11 +2,11 @@ name: Terraform GitOps Workflow
 run-name: TerraformCD
 
 on:
-  push:
-    branches:
-      - main
-  pull_request:
-    types: [ opened, synchronize, reopened, edited ]
+  # push:
+  #   branches:
+  #     - main
+  # pull_request:
+  #   types: [ opened, synchronize, reopened, edited ]
   workflow_dispatch:
     inputs:
       TF_LOG:

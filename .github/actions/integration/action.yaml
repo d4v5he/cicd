@@ -1,0 +1,63 @@
+name: Integration Test
+description: 'Integration test for mysql'
+
+inputs:
+  skip_checkout:
+    description: 'Skip checkout'
+    default: 'true'
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Checkout Code
+      if: inputs.skip_checkout != 'true'
+      uses: actions/checkout@v3
+
+    - name: Start MySQL
+      shell: bash
+      run: |
+        docker run -d --name mysql \
+          -e MYSQL_ROOT_PASSWORD=password \
+          -e MYSQL_DATABASE=test_db \
+          -p 3306:3306 \
+          mysql:5.7
+
+    - name: Wait for MySQL
+      shell: bash
+      run: |
+        until docker exec $(docker ps -q -f "ancestor=mysql:5.7") mysqladmin ping --silent; do
+          echo "Waiting for MySQL..."
+          sleep 5
+        done
+
+    - name: Create Tables
+      shell: bash
+      run: |
+        docker exec $(docker ps -q -f "ancestor=mysql:5.7") mysql -uroot -ppassword test_db -e "
+        CREATE TABLE users (id INT PRIMARY KEY, name VARCHAR(255));
+        CREATE TABLE products (id INT PRIMARY KEY, name VARCHAR(255));
+        "
+
+    - name: Build Docker Image
+      shell: bash
+      run: docker build -t python-app .
+
+    - name: Run Write Data
+      shell: bash
+      run: |
+        docker run --network host \
+          -e DB_HOST=127.0.0.1 \
+          -e DB_USER=root \
+          -e DB_PASSWORD=password \
+          -e DB_NAME=test_db \
+          -e ACTION=write python-app
+
+    - name: Run Check Data
+      shell: bash
+      run: |
+        docker run --network host \
+          -e DB_HOST=127.0.0.1 \
+          -e DB_USER=root \
+          -e DB_PASSWORD=password \
+          -e DB_NAME=test_db \
+          -e ACTION=check python-app

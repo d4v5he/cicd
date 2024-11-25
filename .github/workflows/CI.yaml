@@ -18,7 +18,7 @@ jobs:
       - name: Install Python 3.12
         run: |
           sudo yum update -y
-          sudo yum install python34 python34-pip
+          sudo yum install python3 -y
 
       - name: Install Docker
         run: |

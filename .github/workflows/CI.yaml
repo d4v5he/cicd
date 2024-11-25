@@ -28,9 +28,8 @@ jobs:
           docker --version
 
       - name: Install Dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip3 install pytest requests mysql-connector-python
+          python -m pip install --upgrade pip
+          pip install pytest requests mysql-connector-python
 
       - name: Run Unit Tests
         run: pytest db_app/test_users.py

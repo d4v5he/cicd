@@ -18,7 +18,7 @@ jobs:
       - name: Install Python 3.12
         run: |
           sudo yum update -y
-          sudo yum install python3 -y 
+          sudo yum install python3 -y
           sudo yum install -y python3-pip
 
       - name: Install Docker
@@ -37,7 +37,7 @@ jobs:
         run: pytest db_app/test_users.py
 
       - name: Trivy Code Security Scan
-        uses: .github/actions/security-scan
+        uses: ./.github/actions/security-scan
         with:
           scan_type: 'repository'
           severities: 'HIGH,CRITICAL'
@@ -46,18 +46,18 @@ jobs:
         run: docker build -t python-app .
 
       - name: Trivy Docker Security Scan
-        uses: .github/actions/security-scan
+        uses: ./.github/actions/security-scan
         with:
           scan_type: 'image'
           image_to_scan: 'python-app:latest'
           severities: 'HIGH,CRITICAL'
 
       - name: Run Integration Tests
-        uses: .github/actions/integration
+        uses: ./.github/actions/integration
         with:
           skip_checkout: 'true'
 
       - name: Bump Version
-        uses: .github/actions/version-bump
+        uses: ./.github/actions/version-bump
         with:
           version_type: 'patch'

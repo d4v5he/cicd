@@ -43,7 +43,7 @@ jobs:
           severities: 'HIGH,CRITICAL'
 
       - name: Build Docker Image
-        run: docker build -t python-app .
+        run: sudo docker build -t python-app .
 
       - name: Trivy Docker Security Scan
         uses: ./.github/actions/security-scan

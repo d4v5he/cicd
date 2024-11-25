@@ -17,14 +17,8 @@ jobs:
 
       - name: Install Python 3.12
         run: |
-          sudo yum update -y || sudo dnf update -y
-          sudo yum install -y gcc gcc-c++ make zlib-devel bzip2 bzip2-devel readline-devel sqlite sqlite-devel openssl-devel tk-devel libffi-devel xz-devel
-          curl -O https://www.python.org/ftp/python/3.12.0/Python-3.12.0.tgz
-          tar xvf Python-3.12.0.tgz
-          cd Python-3.12.0
-          ./configure --enable-optimizations
-          make
-          sudo make altinstall
+          sudo yum update -y
+          sudo yum install python34 python34-pip
 
       - name: Install Docker
         run: |

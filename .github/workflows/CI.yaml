@@ -40,10 +40,10 @@ jobs:
         uses: ./.github/actions/security-scan
         with:
           scan_type: 'repository'
-          severities: 'HIGH,CRITICAL'
+          severities: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL' # 'HIGH,CRITICAL'
 
       - name: Build Docker Image
-        run: sudo docker build -t python-app .
+        run: sudo docker build -t python-app ./db_app
 
       - name: Trivy Docker Security Scan
         uses: ./.github/actions/security-scan

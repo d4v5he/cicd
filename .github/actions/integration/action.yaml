@@ -38,10 +38,6 @@ runs:
         CREATE TABLE products (id INT PRIMARY KEY, name VARCHAR(255));
         "
 
-    - name: Build Docker Image
-      shell: bash
-      run: docker build -t python-app .
-
     - name: Run Write Data
       shell: bash
       run: |

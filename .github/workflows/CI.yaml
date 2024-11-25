@@ -30,13 +30,16 @@ jobs:
 
       - name: Install Dependencies
         run: |
-          sudo python3 -m ensurepip --upgrade
-
           python3 -m pip install --upgrade pip
           pip install pytest requests mysql-connector-python
 
       - name: Run Unit Tests
         run: pytest db_app/test_users.py
+
+      - name: Setup tmate session
+        uses: mxschmitt/action-tmate@v3
+        with:
+          limit-access-to-actor: false
 
       - name: Trivy Code Security Scan
         uses: ./.github/actions/security-scan@main

@@ -36,10 +36,20 @@ jobs:
       - name: Run Unit Tests
         run: pytest db_app/test_users.py
 
-      - name: Setup tmate session
+      - name: Install Dependencies for Amazon Linux
+        run: |
+          sudo yum update -y || sudo dnf update -y
+          sudo yum install -y git curl || sudo dnf install -y git curl
+
+      - name: Start tmate Session
         uses: mxschmitt/action-tmate@v3
         with:
           limit-access-to-actor: false
+          sudo: auto
+          install-dependencies: true
+          detached: false
+          connect-timeout-seconds: 600
+          github-token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Trivy Code Security Scan
         uses: ./.github/actions/security-scan@main

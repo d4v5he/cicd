@@ -31,6 +31,7 @@ jobs:
           sudo systemctl enable docker
           sudo usermod -aG docker $USER
           newgrp docker
+          sudo chmod 666 /var/run/docker.sock
 
       - name: Run Unit Tests
         run: pytest db_app/test_users.py
@@ -40,6 +41,7 @@ jobs:
         with:
           scan_type: 'repository'
           severities: 'HIGH,CRITICAL'
+          repo_path: './db_app'
 
       - name: Build Docker Image
         run: |

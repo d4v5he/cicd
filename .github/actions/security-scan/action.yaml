@@ -56,6 +56,9 @@ runs:
       if: inputs.skip_checkout != 'ture'
       uses: actions/checkout@v3
 
+    - name: DEBUG1
+      shell: bash
+      run: ls -l
 
     - name: Trivy - Repository Scan
       if: inputs.scan_type == 'reposetory'

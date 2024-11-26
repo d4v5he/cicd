@@ -72,4 +72,5 @@ jobs:
         if: always()
         run: |
           echo "Cleaning up repo..."
-          rm rf ./cicd
+          ls -l
+          rm -rf ../cicd

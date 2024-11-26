@@ -46,6 +46,4 @@ runs:
       shell: bash
       run: |
         git tag $new_version
-        ls -l
-        echo version $new_version
-        # git push origin $new_version
+        git push origin $new_version

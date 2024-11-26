@@ -41,7 +41,6 @@ jobs:
         with:
           scan_type: 'repository'
           severities: 'HIGH,CRITICAL'
-          repo_path: './db_app'
 
       - name: Build Docker Image
         run: |

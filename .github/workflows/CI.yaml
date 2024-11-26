@@ -63,7 +63,7 @@ jobs:
         uses: ./.github/actions/version-bump
         with:
           version_type: 'patch'
-          git_user_name: 'githubaction'
-          git_user_email: 'gh_action@autometion.com'
+          git_user_name: 'd4v5he'
+          git_user_email: 'd4v5he@gmail.com'
         env:
           GIT_PAT: ${{ secrets.GIT_PAT }}

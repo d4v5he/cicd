@@ -30,13 +30,24 @@ runs:
     - name: Calculate New Version
       shell: bash
       run: |
-        latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
-        version=$(echo "$latest_tag" | sed -E 's/^v//')
-        echo "Current version: ${version:-0.0.0}"
+        # Get the latest tag or default to v0.0.0
+        latest_tag=$(git tag -l --sort=-v:refname | head -n 1 || echo "v0.0.0")
+        version=$(echo "$latest_tag" | sed 's/^v//')
+        echo "Current version: $version"
 
-        major=$(echo $version | cut -d. -f1)
-        minor=$(echo $version | cut -d. -f2)
-        patch=$(echo $version | cut -d. -f3)
+        # Split the version into major, minor, and patch
+        major=$(echo "$version" | cut -d. -f1)
+        minor=$(echo "$version" | cut -d. -f2)
+        patch=$(echo "$version" | cut -d. -f3)
+
+        # Handle cases with no existing tags
+        if [[ -z "$major" || -z "$minor" || -z "$patch" ]]; then
+          major=0
+          minor=0
+          patch=0
+        fi
+
+        # Increment the version based on input
         if [[ "${{ inputs.version_type }}" == "major" ]]; then
           new_version="$((major + 1)).0.0"
         elif [[ "${{ inputs.version_type }}" == "minor" ]]; then
@@ -44,13 +55,14 @@ runs:
         else
           new_version="$major.$minor.$((patch + 1))"
         fi
+
         echo "New version: $new_version"
         echo "new_version=v$new_version" >> $GITHUB_ENV
 
     - name: Create New Tag
       shell: bash
       env:
-        GIT_PAT: ${{ env.GIT_PAT }}
+        GIT_PAT: ${{ secrets.GIT_PAT }}
       run: |
         git tag $new_version
         git push https://${{ inputs.git_user_name }}:$GIT_PAT@github.com/${{ github.repository }} $new_version

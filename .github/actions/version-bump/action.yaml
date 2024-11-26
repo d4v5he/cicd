@@ -46,4 +46,4 @@ runs:
       shell: bash
       run: |
         git tag $new_version
-        git push origin $new_version
+        git push https://$GIT_PAT@github.com/${{ github.repository }} $new_version

@@ -13,6 +13,17 @@ runs:
       if: inputs.skip_checkout != 'true'
       uses: actions/checkout@v3
 
+    - name: Ensure MySQL Container is Removed
+      shell: bash
+      run: |
+        echo "Checking if MySQL container exists..."
+        if docker ps -a --format '{{.Names}}' | grep -q '^mysql$'; then
+          echo "MySQL container exists. Removing it..."
+          docker rm -f mysql
+        else
+          echo "No MySQL container found. Continuing..."
+        fi
+
     - name: Start MySQL
       shell: bash
       run: |

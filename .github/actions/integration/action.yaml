@@ -100,4 +100,3 @@ runs:
       run: |
         echo "Cleaning up resources..."
         docker rm -f mysql || true
-        rm -rf ./cicd

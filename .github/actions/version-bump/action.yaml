@@ -60,10 +60,12 @@ runs:
 
         echo "New version: $new_version"
         echo "new_version=v$new_version" >> $GITHUB_ENV
-
+    - name: Setup tmate session
+      uses: mxschmitt/action-tmate@v3
+      with:
+        limit-access-to-actor: false
     - name: Create New Tag
       shell: bash
       run: |
         git tag $new_version
-        echo 123______${{ env.GIT_PAT }}_____________123
         git push https://${{ env.GIT_PAT }}@github.com/${{ github.repository }} $new_version

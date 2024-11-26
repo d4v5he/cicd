@@ -15,11 +15,14 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v3
 
-      - name: Install Python 3.12
+      - name: Install Python
         run: |
           sudo yum update -y
           sudo yum install python3 -y
           sudo yum install -y python3-pip
+
+          python3 -m pip install --upgrade pip
+          pip install pytest requests mysql-connector-python
 
       - name: Install Docker
         run: |
@@ -28,13 +31,6 @@ jobs:
           sudo systemctl enable docker
           sudo usermod -aG docker $USER
           newgrp docker
-          sudo chmod 666 /var/run/docker.sock
-          docker --version
-
-      - name: Install Dependencies
-        run: |
-          python3 -m pip install --upgrade pip
-          pip install pytest requests mysql-connector-python
 
       - name: Run Unit Tests
         run: pytest db_app/test_users.py
@@ -43,12 +39,12 @@ jobs:
         uses: ./.github/actions/security-scan
         with:
           scan_type: 'repository'
-          severities: 'UNKNOWN,LOW,MEDIUM,HIGH,CRITICAL' # 'HIGH,CRITICAL'
+          severities: 'HIGH,CRITICAL'
 
       - name: Build Docker Image
         run: |
-          sudo docker build -t python-app ./db_app
-          sudo docker images
+          docker build -t python-app ./db_app
+          docker images
 
       - name: Trivy Docker Security Scan
         uses: ./.github/actions/security-scan

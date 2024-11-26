@@ -25,9 +25,15 @@ inputs:
   create_artifact:
     description: 'Upload an artifact of the scan results'
     default: 'true'
+  repo_path:
+    description: 'The repo working dir'
+    default: '.'
   skip_trivy_installation:
     description: 'Skip trivy installtion if done in previous steps'
     default: 'false'
+  skip_checkout:
+    description: 'Skip git repo checkout'
+    default: 'true'
 
 
 runs:
@@ -47,6 +53,7 @@ runs:
 
 
     - name: Checkout Code
+      if: inputs.skip_checkout != 'ture'
       uses: actions/checkout@v3
 
 
@@ -54,16 +61,16 @@ runs:
       if: inputs.scan_type == 'reposetory'
       shell: bash
       run: |
-        trivy repo --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --cache-dir . --output ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} .
-        cat ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
+        trivy repo --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --cache-dir ${{ inputs.repo_path }} --output ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} ${{ inputs.repo_path }}
+        cat ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
 
 
     - name: Trivy - Repository Scan
       if: inputs.scan_type == 'image'
       shell: bash
       run: |
-        trivy image ${{ inputs.image_to_scan }} --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --output ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} --cache-dir .
-        cat ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
+        trivy image ${{ inputs.image_to_scan }} --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --output ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} --cache-dir ${{ inputs.repo_path }}
+        cat ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
 
 
     - name: Upload Results Artifact
@@ -72,7 +79,7 @@ runs:
       with:
         retention-days: 1
         name: ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
-        path: ./${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
+        path: ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
 
 
     - name: Check for Trivy Vulnerabilities
@@ -82,7 +89,7 @@ runs:
         found_issues=0
 
         for severity in $severities; do
-          if grep -q "$severity" ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}; then
+          if grep -q "$severity" ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}; then
             echo "Vulnerabilities found with severity $severity!"
             found_issues=1
           fi

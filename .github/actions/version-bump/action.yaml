@@ -13,6 +13,7 @@ inputs:
     description: 'The git user email'
     required: true
 
+
 runs:
   using: "composite"
   steps:
@@ -64,6 +65,4 @@ runs:
       shell: bash
       run: |
         git tag $new_version
-        echo pat: $GIT_PAT
-        echo pat: ${{ env.GIT_PAT }}
-        git push https://${{ inputs.git_user_name }}:$GIT_PAT@github.com/${{ github.repository }} $new_version
+        git push https://${{ env.GIT_PAT }}@github.com/${{ github.repository }} $new_version

@@ -10,7 +10,8 @@ on:
 
 jobs:
   ci-pipeline:
-    runs-on: self-hosted
+    runs-on:
+      - self-hosted
 
     steps:
       - name: Checkout Code

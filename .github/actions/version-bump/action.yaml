@@ -13,11 +13,7 @@ runs:
       shell: bash
       run: |
         sudo yum install -y git
-        git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git config --global user.name "github-actions[bot]"
-        git config --global --add safe.directory /github/workspace
-
-        ls -l
+        git config --global user.name "d4v5he"
 
     - name: Fetch Tags
       shell: bash
@@ -48,4 +44,5 @@ runs:
         GIT_PAT: ${{ env.GIT_PAT }}
       run: |
         git tag $new_version
+        echo $GIT_PAT
         git push https://$GIT_PAT@github.com/${{ github.repository }} $new_version

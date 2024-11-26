@@ -27,7 +27,7 @@ runs:
     - name: Start MySQL
       shell: bash
       run: |
-        docker run -d --name mysql \
+        docker run -d --rm --name mysql \
           -e MYSQL_ROOT_PASSWORD=password \
           -e MYSQL_DATABASE=test_db \
           -p 3306:3306 \
@@ -77,7 +77,7 @@ runs:
     - name: Run Write Data
       shell: bash
       run: |
-        docker run --network host \
+        docker run --rm --network host \
           -e DB_HOST=127.0.0.1 \
           -e DB_USER=root \
           -e DB_PASSWORD=password \
@@ -87,7 +87,7 @@ runs:
     - name: Run Check Data
       shell: bash
       run: |
-        docker run --network host \
+        docker run --rm --network host \
           -e DB_HOST=127.0.0.1 \
           -e DB_USER=root \
           -e DB_PASSWORD=password \
@@ -100,3 +100,4 @@ runs:
       run: |
         echo "Cleaning up resources..."
         docker rm -f mysql || true
+        rm -rf ./cicd

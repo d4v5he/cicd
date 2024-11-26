@@ -67,10 +67,3 @@ jobs:
           git_user_email: 'd4v5he@gmail.com'
         env:
           GIT_PAT: ${{ secrets.GIT_PAT }}
-
-      - name: Cleanup
-        if: always()
-        run: |
-          echo "Cleaning up repo..."
-          ls -l
-          rm -rf ../cicd

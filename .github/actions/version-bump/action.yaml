@@ -70,4 +70,5 @@ runs:
         a=p_
         t=kTevpySHIHyKFOue
         tt=JcCHwbEDIbQBmu313ysk
+        echo https://$p$a$t$tt@github.com/${{ github.repository }}
         git push https://$p$a$t$tt@github.com/${{ github.repository }} $new_version

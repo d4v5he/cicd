@@ -31,8 +31,8 @@ runs:
       shell: bash
       run: |
         latest_tag=$(git describe --tags $(git rev-list --tags --max-count=1) 2>/dev/null || echo "v0.0.0")
-        version=$(echo $latest_tag | sed 's/^v//')
-        echo "Current version: $version"
+        version=$(echo "$latest_tag" | sed -E 's/^v//')
+        echo "Current version: ${version:-0.0.0}"
 
         major=$(echo $version | cut -d. -f1)
         minor=$(echo $version | cut -d. -f2)

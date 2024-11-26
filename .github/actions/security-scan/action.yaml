@@ -58,13 +58,13 @@ runs:
 
     - name: DEBUG1
       shell: bash
-      run: ls -l ${{ inputs.trivy_artifact_name }}
+      run: ls -l ${{ inputs.repo_path }}
 
     - name: Trivy - Repository Scan
       if: inputs.scan_type == 'reposetory'
       shell: bash
       run: |
-        trivy repo --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --cache-dir ${{ inputs.repo_path }} --output ${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} ${{ inputs.repo_path }}
+        trivy repo --severity ${{ inputs.severities }} --format ${{ inputs.trivy_output_format }} --cache-dir ${{ inputs.repo_path }} --output ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }} ${{ inputs.repo_path }}
         cat ${{ inputs.repo_path }}/${{ inputs.trivy_artifact_name }}.${{ inputs.trivy_output_format }}
 
 

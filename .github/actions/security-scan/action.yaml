@@ -58,7 +58,7 @@ runs:
 
     - name: DEBUG1
       shell: bash
-      run: ls -l
+      run: ls -l ${{ inputs.trivy_artifact_name }}
 
     - name: Trivy - Repository Scan
       if: inputs.scan_type == 'reposetory'

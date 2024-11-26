@@ -9,6 +9,11 @@ inputs:
 runs:
   using: "composite"
   steps:
+    - name: Install Git
+      shell: bash
+      run: |
+        sudo yum install -y git
+
     - name: Fetch Tags
       shell: bash
       run: |

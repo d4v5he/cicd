@@ -44,6 +44,8 @@ runs:
 
     - name: Create New Tag
       shell: bash
+      env:
+        GIT_PAT: ${{ env.GIT_PAT }}
       run: |
         git tag $new_version
         git push https://$GIT_PAT@github.com/${{ github.repository }} $new_version

@@ -63,3 +63,4 @@ jobs:
         uses: ./.github/actions/version-bump
         with:
           version_type: 'patch'
+ 

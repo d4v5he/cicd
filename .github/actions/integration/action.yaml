@@ -43,6 +43,23 @@ runs:
         done
         echo "MySQL is ready!"
 
+    - name: Verify MySQL Initialization
+      shell: bash
+      run: |
+        echo "Verifying MySQL root access..."
+        for i in {1..10}; do
+          if docker exec mysql mysql -uroot -ppassword -e "SELECT 1;" &> /dev/null; then
+            echo "MySQL is ready and accepting connections."
+            break
+          fi
+          echo "MySQL initialization still in progress. Retrying in 5 seconds..."
+          sleep 5
+          if [ "$i" -eq 10 ]; then
+            echo "Failed to connect to MySQL after multiple attempts."
+            exit 1
+          fi
+        done
+
     - name: Create Tables
       shell: bash
       run: |

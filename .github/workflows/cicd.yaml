@@ -4,13 +4,12 @@ run-name: CI/CD
 on:
   push:
     branches:
-        - test
-#       - main
-#     paths-ignore:
-#       - .github/workflows/cicd.yaml
-#   pull_request:
-#     branches:
-#       - main
+      - main
+    # paths-ignore:
+    #   - .github/workflows/cicd.yaml
+  pull_request:
+    branches:
+      - main
 
 jobs:
   build-test:
@@ -56,6 +55,13 @@ jobs:
         run: |
           docker build -t users_app:v1 ./app
           docker tag users_app:v1 d4v5he/users_app:v1
+
+      - name: Trivy Install
+        run: sudo curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sudo sh -s -- -b /usr/local/bin v0.54.1
+
+      - name: Image Scan
+        run: trivy image d4v5he/users_app:v1
+
 
       - name: Push Docker image
         run: docker push d4v5he/users_app:v1
